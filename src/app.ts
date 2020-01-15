@@ -1,26 +1,40 @@
-class Department {
-  private employees: string[] = [];
+// const names: Array<string> = [];
 
-  constructor(private readonly id: string, public name: string) {}
+// const promise: Promise<string> = new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     resolve('This is done!');
+//   }, 2000);
+// });
 
-  describe(this: Department) {
-    console.log(`Department: ${this.name} [${this.id}]`);
-  }
+// promise.then((data) => {
+//   data.split(' ');
+// });
 
-  addEmployee(employee: string) {
-    this.employees.push(employee);
-  }
-
-  printEmployeeInformation() {
-    console.log(this.employees.length);
-    console.log(this.employees);
-  }
+function merge<T1 extends object, T2 extends object>(objA: T1, objB: T2) {
+  return Object.assign(objA, objB);
 }
 
-const accounting = new Department('d1', 'Accounting');
+const mergedObj = merge({ name: 'Simcha' }, { age: 52 });
 
-accounting.addEmployee('Tina');
-accounting.addEmployee('Musket');
+interface Lengthy {
+  length: number;
+}
 
-accounting.describe();
-accounting.printEmployeeInformation();
+function countAndDescribe<T extends Lengthy>(element: T): [T, string] {
+  let descriptionText = 'Got no value';
+
+  switch (element.length) {
+    case 0:
+      descriptionText = 'Got no value.';
+      break;
+    case 1:
+      descriptionText = 'Got 1 element.';
+      break;
+    default:
+      descriptionText = `Got ${element.length} elements.`;
+  }
+  return [element, descriptionText];
+}
+
+console.log(countAndDescribe('Hi there!'));
+console.log(countAndDescribe([1, 2, 3]));
