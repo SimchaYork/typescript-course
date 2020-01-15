@@ -1,40 +1,34 @@
-// const names: Array<string> = [];
-
-// const promise: Promise<string> = new Promise((resolve, reject) => {
-//   setTimeout(() => {
-//     resolve('This is done!');
-//   }, 2000);
-// });
-
-// promise.then((data) => {
-//   data.split(' ');
-// });
-
-function merge<T1 extends object, T2 extends object>(objA: T1, objB: T2) {
-  return Object.assign(objA, objB);
-}
-
-const mergedObj = merge({ name: 'Simcha' }, { age: 52 });
-
-interface Lengthy {
-  length: number;
-}
-
-function countAndDescribe<T extends Lengthy>(element: T): [T, string] {
-  let descriptionText = 'Got no value';
-
-  switch (element.length) {
-    case 0:
-      descriptionText = 'Got no value.';
-      break;
-    case 1:
-      descriptionText = 'Got 1 element.';
-      break;
-    default:
-      descriptionText = `Got ${element.length} elements.`;
+function Logger(logString: string) {
+  console.log('Bar!')
+  return function (target: Function) {
+    console.log(logString);
+    console.log(target);
   }
-  return [element, descriptionText];
 }
 
-console.log(countAndDescribe('Hi there!'));
-console.log(countAndDescribe([1, 2, 3]));
+function WithTemplate(template: string, hookId: string) {
+  console.log('Foo!')
+  return function(constructor: any) {
+    console.log('Rendering template...')
+    const hookEl = document.getElementById(hookId);
+    const p = new constructor();
+    if (hookEl) {
+      hookEl.innerHTML = template;
+      hookEl.querySelector('h1')!.textContent = p.name;
+    }
+  }
+}
+
+@Logger('Getting schwifty...')
+@WithTemplate('<h1>My Person Object</h1>', 'app')
+class Person {
+  name = 'Simcha';
+
+  constructor() {
+    console.log('Creating person object...');
+  }
+}
+
+const pers = new Person();
+
+console.log(pers);
