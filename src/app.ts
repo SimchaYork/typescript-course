@@ -1,25 +1,28 @@
+/* eslint-disable max-classes-per-file */
 function Logger(logString: string) {
-  console.log('Bar!')
-  return function (target: Function) {
+  console.log('Bar!');
+  return function(target: Function) {
     console.log(logString);
     console.log(target);
-  }
+  };
 }
 
 function WithTemplate(template: string, hookId: string) {
-  console.log('Foo!')
-  return function<T extends {new(...args: any[]): { name: string }}>(originalConstructor: T) {
+  console.log('Foo!');
+  return function<T extends { new (...args: any[]): { name: string } }>(
+    originalConstructor: T
+  ) {
     return class extends originalConstructor {
       constructor(..._: any[]) {
         super();
-        console.log('Rendering template...')
+        console.log('Rendering template...');
         const hookEl = document.getElementById(hookId);
         if (hookEl) {
           hookEl.innerHTML = template;
           hookEl.querySelector('h1')!.textContent = this.name;
         }
       }
-    }
+    };
   };
 }
 
@@ -51,7 +54,11 @@ function Log2(target: any, name: string, descriptor: PropertyDescriptor) {
   console.log(descriptor);
 }
 
-function Log3(target: any, name: string | Symbol, descriptor: PropertyDescriptor) {
+function Log3(
+  target: any,
+  name: string | Symbol,
+  descriptor: PropertyDescriptor
+) {
   console.log('Method decorator!');
   console.log(target);
   console.log(name);
@@ -90,7 +97,11 @@ class Product {
   }
 }
 
-function AutoBind(_target: any, _methodName: string, descriptor: PropertyDescriptor) {
+function AutoBind(
+  _target: any,
+  _methodName: string,
+  descriptor: PropertyDescriptor
+) {
   const originalMethod = descriptor.value;
   const adjDescriptor: PropertyDescriptor = {
     configurable: true,
@@ -98,7 +109,7 @@ function AutoBind(_target: any, _methodName: string, descriptor: PropertyDescrip
     get() {
       const boundFn = originalMethod.bind(this);
       return boundFn;
-    }
+    },
   };
   return adjDescriptor;
 }
@@ -121,8 +132,8 @@ button.addEventListener('click', p.showMessage);
 
 interface ValidatorConfig {
   [property: string]: {
-    [validatableProp: string]: string[] // ['required', 'positive']
-  }
+    [validatableProp: string]: string[]; // ['required', 'positive']
+  };
 }
 
 const registeredValidators: ValidatorConfig = {};
@@ -130,14 +141,14 @@ const registeredValidators: ValidatorConfig = {};
 function Required(target: any, propName: string) {
   registeredValidators[target.constructor.name] = {
     ...registeredValidators[target.constructor.name],
-    [propName]: ['required']
+    [propName]: ['required'],
   };
 }
 
 function PositiveNumber(target: any, propName: string) {
   registeredValidators[target.constructor.name] = {
     ...registeredValidators[target.constructor.name],
-    [propName]: ['positive']
+    [propName]: ['positive'],
   };
 }
 
@@ -191,3 +202,6 @@ courseForm.addEventListener('submit', (event) => {
   }
   console.log(createdCourse);
 });
+
+let foo = Error('foo');
+let bar = TypeError('bar');
